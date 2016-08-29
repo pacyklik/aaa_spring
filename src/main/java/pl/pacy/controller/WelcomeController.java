@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package sample.freemarker;
+package pl.pacy.controller;
 
 import java.util.Date;
 import java.util.Map;
