@@ -16,13 +16,39 @@
 
 package sample.freemarker;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import pl.pacy.entity.Car;
+import pl.pacy.repo.CarRepository;
 
+import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
+import java.util.HashSet;
+import java.util.Set;
+
+@EntityScan("pl.pacy.entity")
+@EnableJpaRepositories(basePackages = "pl.pacy.repo")
 @SpringBootApplication(scanBasePackages = { "pl.pacy" })
 public class SampleWebFreeMarkerApplication {
 
+	@Autowired
+	private CarRepository carRepository;
+
+	@PostConstruct
+	@Transactional
+	public void start() {
+		Set<Car> cars = new HashSet<>();
+		Car c = new Car();
+		cars.add(Car.builder().numerRej("LPU45454").silnik("1.4").build());
+		cars.add(Car.builder().numerRej("LSW20203").silnik("3.8").build());
+		cars.add(Car.builder().numerRej("LU18181").silnik("2.4").build());
+		cars.add(Car.builder().numerRej("LPU45454").silnik("1.4").build());
+		carRepository.save(cars);
+	}
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(SampleWebFreeMarkerApplication.class, args);
