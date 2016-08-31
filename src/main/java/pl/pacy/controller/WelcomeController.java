@@ -36,9 +36,14 @@ public class WelcomeController {
 		return "welcome";
 	}
 
-    @GetMapping("/")
-    public String index(Map<String, Object> model) {
-        return "index";
-    }
+	@GetMapping("/")
+	public String index(Map<String, Object> model) {
+		return "index";
+	}
+
+	@GetMapping("/test")
+	public String test(Map<String, Object> model) {
+		return "test";
+	}
 
 }

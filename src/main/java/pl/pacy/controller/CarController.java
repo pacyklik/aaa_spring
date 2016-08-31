@@ -1,13 +1,10 @@
 package pl.pacy.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.pacy.dto.CarDTO;
 import pl.pacy.service.CarService;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -22,5 +19,10 @@ public class CarController {
 	@GetMapping("/car")
 	public Set<CarDTO> car() {
 		return carService.all();
+	}
+
+	@PostMapping("/car")
+	public void newCar(@RequestBody CarDTO car) {
+		System.out.println(car.getNumerRej());
 	}
 }
