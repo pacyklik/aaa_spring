@@ -10,5 +10,5 @@ import java.util.Set;
 public interface CarService {
 	public Set<CarDTO> all();
 
-	public void save(CarDTO carDTO);
+	public CarDTO save(CarDTO carDTO);
 }

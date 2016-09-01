@@ -21,17 +21,17 @@ public class CarServiceImpl implements CarService {
 	public Set<CarDTO> all() {
 		Set<CarDTO> cars = new HashSet<>();
 		for (Car car : carRepository.findAll()) {
-			// lombook :)
-			cars.add(CarDTO.builder().numerRej(car.getNumerRej()).silnik(car.getSilnik()).build());
+			cars.add(CarDTO.builder().id(car.getId()).numerRej(car.getNumerRej()).silnik(car.getSilnik()).build());
 		}
 		return cars;
 	}
 
-	@Override public void save(CarDTO carDTO) {
+	@Override public CarDTO save(CarDTO carDTO) {
 		Car car = Car.builder()
 				.numerRej(carDTO.getNumerRej())
 				.silnik(carDTO.getSilnik())
 				.build();
-		carRepository.save(car);
+		car = carRepository.save(car);
+		return CarDTO.builder().id(car.getId()).numerRej(car.getNumerRej()).silnik(car.getSilnik()).build();
 	}
 }

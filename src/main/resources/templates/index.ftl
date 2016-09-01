@@ -22,7 +22,7 @@
 </head>
 <body>
 
-<div ng-controller="tableCtrl">
+<div ng-controller="carCtrl">
 
     <p>Asynchronous getting message:</p>
 
@@ -31,17 +31,18 @@
         <tr>
             <th>numer rejestracyjny</th>
             <th>silnik</th>
+            <th>akcje</th>
         </tr>
         <tr ng-repeat="x in carData">
-            <td>{{ x.numerRej}}</td>
+            <td>{{x.numerRej}}</td>
             <td>{{x.silnik }}</td>
+            <td>
+                <button ng-click="delete(x.id)">USUN</button>
+            </td>
         </tr>
     </table>
-    <br/>
-</div>
-<br/>
+    <br/><br/>
 
-<div ng-controller="carAdd">
     <form>
         <table>
             <tr>
@@ -68,24 +69,23 @@
 
 <script>
     var app = angular.module('carApp', []);
-    app.controller('tableCtrl', function ($scope, $http) {
+    app.controller('carCtrl', function ($scope, $http) {
         $http.get("car").then(function (response) {
             $scope.carData = response.data;
         });
-    });
-    app.controller('carAdd', function ($scope, $http) {
         $scope.send = function () {
             var data = {"numerRej": $scope.numerRej, "silnik": $scope.silnik};
             $http.post('car', data).then(function (response) {
-//                        $http.get("car").then(function (response) {
-//                            $scope.carData = response.data;
-//                        });
-//                        $state.reload();
-                        $scope.carData = response.data;
-                    },
-                    function (response) {
-                        alert('error');
-                    });
+                $scope.carData.push(response.data);
+            }, function (response) {
+                alert('error');
+            });
+        };
+        $scope.delete = function (id) {
+            $http.delete('car/' + id).then(function (response) {
+
+            });
+            //alert("okidoki: " + id);
         };
     });
 </script>
