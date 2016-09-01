@@ -77,10 +77,11 @@
         $scope.send = function () {
             var data = {"numerRej": $scope.numerRej, "silnik": $scope.silnik};
             $http.post('car', data).then(function (response) {
-                        alert('success');
-                        $http.get("car").then(function (response) {
-                            $scope.carData = response.data;
-                        });
+//                        $http.get("car").then(function (response) {
+//                            $scope.carData = response.data;
+//                        });
+//                        $state.reload();
+                        $scope.carData = response.data;
                     },
                     function (response) {
                         alert('error');

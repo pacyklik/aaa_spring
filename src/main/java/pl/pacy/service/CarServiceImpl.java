@@ -26,4 +26,12 @@ public class CarServiceImpl implements CarService {
 		}
 		return cars;
 	}
+
+	@Override public void save(CarDTO carDTO) {
+		Car car = Car.builder()
+				.numerRej(carDTO.getNumerRej())
+				.silnik(carDTO.getSilnik())
+				.build();
+		carRepository.save(car);
+	}
 }

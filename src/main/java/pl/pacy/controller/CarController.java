@@ -22,7 +22,7 @@ public class CarController {
 	}
 
 	@PostMapping("/car")
-	public void newCar(@RequestBody CarDTO car) {
-		System.out.println(car.getNumerRej());
+	public void newCar(@RequestBody CarDTO carDTO) {
+		carService.save(carDTO);
 	}
 }
