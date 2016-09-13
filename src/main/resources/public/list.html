@@ -1,0 +1,59 @@
+<div ng-controller="carCtrl">
+
+    <table>
+        <tr>
+            <th>numer rejestracyjny</th>
+            <th>silnik</th>
+            <th>akcje</th>
+        </tr>
+        <tr ng-repeat="x in carData">
+            <td ng-hide="editId==x.id">{{x.numerRej}}</td>
+            <td ng-hide="editId==x.id">{{x.silnik }}</td>
+            <td ng-show="editId==x.id"><input type="text" id="numerRej_{{x.id}}" value="{{x.numerRej}}"/></td>
+            <td ng-show="editId==x.id"><input type="text" id="silnik_{{x.id}}" value="{{x.silnik }}"/></td>
+            <td ng-hide="editId==x.id">
+                <button ng-click="delete(x.id)">USUN</button>
+                <button ng-click="edit(x.id)">EDYTUJ</button>
+            </td>
+            <td ng-show="editId==x.id">
+                <button ng-click="confirm(x.id)">ZATWIERDZ</button>
+                <button ng-click="cancel()">ANULUJ</button>
+            </td>
+        </tr>
+    </table>
+    <br/><br/>
+
+    <form>
+        <table>
+            <tr>
+                <td>numer rejestracyjny:</td>
+                <td><input type="text" ng-model="numerRej"></td>
+            </tr>
+            <tr>
+                <td>silnik:</td>
+                <td><input type="text" ng-model="silnik"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button ng-click="send()">ZATWIERDŹ</button>
+                </td>
+            </tr>
+
+        </table>
+        <br/>
+
+    </form>
+    <br/><br/>
+    <!--
+    <h1>Twój samochód: '{{numerRej}}' ma silnik '{{silnik}}'.</h1>
+    <br/>
+
+    <button ng-click="listView()">LISTA WIDOK</button>
+    <br/>
+    <hr/>
+    <div ui-view>
+        Loading...
+    </div>
+    -->
+</div>

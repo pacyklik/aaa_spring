@@ -41,6 +41,11 @@ public class WelcomeController {
 		return "index";
 	}
 
+	@GetMapping("/old")
+	public String indexOld(Map<String, Object> model) {
+		return "index_old";
+	}
+
 	@GetMapping("/test")
 	public String test(Map<String, Object> model) {
 		return "test";

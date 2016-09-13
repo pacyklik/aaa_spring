@@ -6,7 +6,9 @@ import pl.pacy.dto.CarDTO;
 import pl.pacy.entity.Car;
 import pl.pacy.repo.CarRepository;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,8 +20,8 @@ public class CarServiceImpl implements CarService {
 	@Autowired
 	private CarRepository carRepository;
 
-	public Set<CarDTO> all() {
-		Set<CarDTO> cars = new HashSet<>();
+	public List<CarDTO> all() {
+		List<CarDTO> cars = new ArrayList<>();
 		for (Car car : carRepository.findAll()) {
 			cars.add(CarDTO.builder().id(car.getId()).numerRej(car.getNumerRej()).silnik(car.getSilnik()).build());
 		}
@@ -33,5 +35,10 @@ public class CarServiceImpl implements CarService {
 				.build();
 		car = carRepository.save(car);
 		return CarDTO.builder().id(car.getId()).numerRej(car.getNumerRej()).silnik(car.getSilnik()).build();
+	}
+
+	@Override public List<CarDTO> delete(Long id) {
+		carRepository.delete(id);
+		return all();
 	}
 }
