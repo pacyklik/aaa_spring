@@ -20,11 +20,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import pl.pacy.entity.Car;
 import pl.pacy.repo.CarRepository;
 
@@ -33,10 +36,13 @@ import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Set;
 
+//@Configuration
+//@EnableWebSecurity
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EntityScan("pl.pacy.entity")
 @EnableJpaRepositories(basePackages = "pl.pacy.repo")
 @SpringBootApplication(scanBasePackages = { "pl.pacy" })
-public class SampleWebFreeMarkerApplication {
+public class SampleWebFreeMarkerApplication /*extends WebSecurityConfigurerAdapter*/ {
 
 	@Autowired
 	private CarRepository carRepository;
@@ -52,6 +58,23 @@ public class SampleWebFreeMarkerApplication {
 		cars.add(Car.builder().numerRej("LPU45454").silnik("1.4").build());
 		carRepository.save(cars);
 	}
+
+//	@Override
+//	protected void configure(HttpSecurity http) throws Exception {
+//		http.authorizeRequests().antMatchers("/login", "/welcome").permitAll()
+//				.anyRequest()
+//				.fullyAuthenticated().and().formLogin().loginPage("/login")
+//				.failureUrl("/login?error").and().logout()
+//				.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).and()
+//				.exceptionHandling().accessDeniedPage("/access?error");
+//	}
+//
+//	@Autowired
+//	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//		auth.inMemoryAuthentication().withUser("a").password("a")
+//				.roles("ADMIN", "USER").and().withUser("user").password("user")
+//				.roles("USER");
+//	}
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(SampleWebFreeMarkerApplication.class, args);

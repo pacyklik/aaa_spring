@@ -51,4 +51,9 @@ public class WelcomeController {
 		return "test";
 	}
 
+//	@GetMapping("/login")
+//	public String login(Map<String, Object> model) {
+//		return "login";
+//	}
+
 }

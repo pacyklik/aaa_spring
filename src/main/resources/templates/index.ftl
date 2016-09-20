@@ -52,15 +52,19 @@
         $urlRouterProvider.otherwise("/login");
     });
 
+    // by not sending a “WWW-Authenticate” header in a 401 response
+    app.config(function ($httpProvider) {
+        $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+    });
+
+
     app.run(function ($rootScope, $timeout, $state, $window) {
-        // pobranie z sessionStorage czy użytkownik zalogowany i przekazanie do zmiennej
-        $rootScope.authenticatedId = $window.sessionStorage["authenticatedId"];
 
         // zdarzenie zmiany widoku
         $rootScope.$on('$stateChangeSuccess', function (event, fromState, fromParams, toState, toParams) {
 
             // jesli brak usera -> strona logowania
-            if ($rootScope.authenticatedId === undefined) {
+            if ($window.sessionStorage["authenticatedId"] === undefined) {
                 $state.go('login');
             }
         });
@@ -68,18 +72,11 @@
 
     app.controller('appCtrl', function ($scope, $http, $rootScope, $document, $state, $window) {
 
-        // przyklad obserwowania zmiennych
-        $rootScope.$watch('authenticatedId', function (newVal, oldVal) {
-            $window.sessionStorage["authenticatedId"] = newVal;
-            if (newVal !== undefined) {
-                $state.go("list");
-            } else {
-                $state.go('login');
-            }
-        });
-
         $scope.logout = function () {
-            $rootScope.authenticatedId = undefined;
+            $http.post('logout', {}).finally(function() {
+                $window.sessionStorage["authenticatedId"] = undefined;
+                $state.go('login');
+            });
         }
 
     });
@@ -123,17 +120,40 @@
         }
     });
 
-    app.controller('loginCtrl', function ($scope, $http, $rootScope, $document, $state) {
-        $scope.login = function () {
-            var data = {"username": $scope.credentials.username, "password": $scope.credentials.password};
-            $http.post('/api/user', data).then(function (response) {
-                if (response.data.id != null) {
-                    $rootScope.authenticatedId = response.data.id;
+    app.controller('loginCtrl', function ($scope, $http, $rootScope, $document, $state, $window) {
+
+        $rootScope.userInfo = undefined;
+
+        var authenticate = function (credentials, callback) {
+            var headers = credentials ? {authorization: "Basic " + btoa(credentials.username + ":" + credentials.password)} : {};
+            var params = credentials ? {'remember-me': credentials.remember_me} : {};
+            $http.get('/api/user', {headers: headers, params: params}).then(function (response) {
+                if (response.data.name) {
+                    // good way
+                    $window.sessionStorage["authenticatedId"] = response.data.name;
+                } else {
+                    $window.sessionStorage["authenticatedId"] = undefined;
                 }
-            }, function (response) {
-                alert('error');
+                callback && callback();
+            }, function (error) {
+                $window.sessionStorage["authenticatedId"] = undefined;
+                callback && callback();
             });
-        }
+        };
+
+        authenticate();
+        $scope.login = function () {
+            authenticate($scope.credentials, function () {
+                if ($window.sessionStorage["authenticatedId"] !== "undefined") {
+                    alert("login-ok: " + JSON.stringify($window.sessionStorage["authenticatedId"]));
+                    $state.go("list");
+                } else {
+                    alert("login-error");
+                    $state.go('login');
+                }
+            });
+        };
+
     });
 </script>
 
