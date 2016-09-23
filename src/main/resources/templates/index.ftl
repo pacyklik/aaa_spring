@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="carApp">
 <head>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js" type="text/javascript"></script>
     <script src="http://angular-ui.github.io/ui-router/release/angular-ui-router.min.js"></script>
     <style>
         table {
@@ -24,13 +24,18 @@
 <body>
 
 <div ng-controller="appCtrl">
-    <button ng-click="logout()">WYLOGUJ</button>
+    <div ng-show="userName">
+        Dzień dobry {{userName}} :)<br/>
+        <button ng-click="logout()">WYLOGUJ</button>
+    </div>
+    <div ng-show="!userName">
+        Witaj Gość.
+    </div>
     <hr/>
     <div ui-view>
         Loading...
     </div>
 </div>
-
 
 <script>
     var app = angular.module('carApp', ['ui.router']);
@@ -57,28 +62,42 @@
         $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
     });
 
+    app.config(['$httpProvider', function ($httpProvider) {
+        $httpProvider.interceptors.push('$q', '$window', function ($q, $window) {
+            return {
+                'responseError': function (rejection) {
+                    var defer = $q.defer();
+                    if (rejection.status == 401 && $window.sessionStorage["authenticatedId"] != null) {
+                        alert("Sesja wygasla, zaloguj sie ponownie:)");
+                        $window.sessionStorage.removeItem("authenticatedId");
+                        $window.location.reload(true);
+                    }
+                    defer.reject(rejection);
+                    return defer.promise;
+                }
+            };
+        });
+    }]);
+
 
     app.run(function ($rootScope, $timeout, $state, $window) {
-
         // zdarzenie zmiany widoku
         $rootScope.$on('$stateChangeSuccess', function (event, fromState, fromParams, toState, toParams) {
-
             // jesli brak usera -> strona logowania
-            if ($window.sessionStorage["authenticatedId"] === undefined) {
+            if ($window.sessionStorage["authenticatedId"] == null) {
                 $state.go('login');
             }
         });
     });
 
     app.controller('appCtrl', function ($scope, $http, $rootScope, $document, $state, $window) {
-
         $scope.logout = function () {
-            $http.post('logout', {}).finally(function() {
-                $window.sessionStorage["authenticatedId"] = undefined;
+            $http.post('logout', {}).finally(function () {
+                $window.sessionStorage.removeItem("authenticatedId");
+                $rootScope.userName = null;
                 $state.go('login');
             });
         }
-
     });
 
     app.controller('carCtrl', function ($scope, $http, $document, $state) {
@@ -122,21 +141,23 @@
 
     app.controller('loginCtrl', function ($scope, $http, $rootScope, $document, $state, $window) {
 
-        $rootScope.userInfo = undefined;
+        $rootScope.userInfo = null;
 
         var authenticate = function (credentials, callback) {
             var headers = credentials ? {authorization: "Basic " + btoa(credentials.username + ":" + credentials.password)} : {};
             var params = credentials ? {'remember-me': credentials.remember_me} : {};
             $http.get('/api/user', {headers: headers, params: params}).then(function (response) {
                 if (response.data.name) {
-                    // good way
                     $window.sessionStorage["authenticatedId"] = response.data.name;
+                    $rootScope.userName = response.data.name;
                 } else {
-                    $window.sessionStorage["authenticatedId"] = undefined;
+                    $window.sessionStorage.removeItem("authenticatedId");
+                    $rootScope.userName = null;
                 }
                 callback && callback();
             }, function (error) {
-                $window.sessionStorage["authenticatedId"] = undefined;
+                $window.sessionStorage.removeItem("authenticatedId");
+                $rootScope.userName = null;
                 callback && callback();
             });
         };
@@ -144,11 +165,10 @@
         authenticate();
         $scope.login = function () {
             authenticate($scope.credentials, function () {
-                if ($window.sessionStorage["authenticatedId"] !== "undefined") {
-                    alert("login-ok: " + JSON.stringify($window.sessionStorage["authenticatedId"]));
+                if ($window.sessionStorage["authenticatedId"] != null) {
+                    // alert("login-ok: " + JSON.stringify($window.sessionStorage["authenticatedId"]));
                     $state.go("list");
                 } else {
-                    alert("login-error");
                     $state.go('login');
                 }
             });
