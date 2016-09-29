@@ -20,6 +20,11 @@ public class CarServiceImpl implements CarService {
 	@Autowired
 	private CarRepository carRepository;
 
+	public CarDTO one(Long id) {
+		Car car = carRepository.findOne(id);
+		return CarDTO.builder().id(car.getId()).numerRej(car.getNumerRej()).silnik(car.getSilnik()).build();
+	}
+
 	public List<CarDTO> all() {
 		List<CarDTO> cars = new ArrayList<>();
 		for (Car car : carRepository.findAll()) {
@@ -30,6 +35,7 @@ public class CarServiceImpl implements CarService {
 
 	@Override public CarDTO save(CarDTO carDTO) {
 		Car car = Car.builder()
+				.id(carDTO.getId())
 				.numerRej(carDTO.getNumerRej())
 				.silnik(carDTO.getSilnik())
 				.build();

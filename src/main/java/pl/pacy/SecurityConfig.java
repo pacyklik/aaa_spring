@@ -55,13 +55,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 				.httpBasic().and()
 				.authorizeRequests()
-				.antMatchers("/index.html", "/list.html", "/login.html", "/favicon.ico", "/").permitAll().anyRequest()
+				.antMatchers("/*.html", "/favicon.ico", "/", "/js/*", "/css/*").permitAll().anyRequest()
 				.authenticated()
-				.and().logout()
-				.and().addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
+				.and().logout();
+		//.and().addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
 
 		// dezaktywacja tokena csrf
-		//		http.csrf().disable();
+		http.csrf().disable();
 	}
 
 	@Autowired

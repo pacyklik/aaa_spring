@@ -9,6 +9,8 @@ import java.util.Set;
  * Created by pacy on 2016-08-30.
  */
 public interface CarService {
+	public CarDTO one(Long id);
+
 	public List<CarDTO> all();
 
 	public CarDTO save(CarDTO carDTO);

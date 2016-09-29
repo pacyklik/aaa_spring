@@ -12,20 +12,28 @@ import java.util.Set;
  * Created by pacy on 26.08.16.
  */
 @RestController
-//@RequestMapping("/api/cars")
 public class CarController {
 
 	@Autowired
 	private CarService carService;
 
+	@GetMapping("car/{id}")
+	public CarDTO car(@PathVariable Long id) {
+		return carService.one(id);
+	}
+
 	@GetMapping("car")
-	public List<CarDTO> car() {
+	public List<CarDTO> cars() {
 		return carService.all();
 	}
 
-	@PostMapping("car")//("/{id:^[0-9]+$}")
+	@PostMapping("car")
 	public CarDTO newCar(@RequestBody CarDTO carDTO) {
-		//		carService.save(carDTO);
+		return carService.save(carDTO);
+	}
+
+	@PutMapping("car")
+	public CarDTO updateCar(@RequestBody CarDTO carDTO) {
 		return carService.save(carDTO);
 	}
 

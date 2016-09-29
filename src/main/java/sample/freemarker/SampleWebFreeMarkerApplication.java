@@ -22,12 +22,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+//import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+//import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+//import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import pl.pacy.entity.Car;
 import pl.pacy.repo.CarRepository;
 
@@ -36,13 +36,10 @@ import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Set;
 
-//@Configuration
-//@EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EntityScan("pl.pacy.entity")
 @EnableJpaRepositories(basePackages = "pl.pacy.repo")
 @SpringBootApplication(scanBasePackages = { "pl.pacy" })
-public class SampleWebFreeMarkerApplication /*extends WebSecurityConfigurerAdapter*/ {
+public class SampleWebFreeMarkerApplication {
 
 	@Autowired
 	private CarRepository carRepository;

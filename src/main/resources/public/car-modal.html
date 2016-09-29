@@ -1,0 +1,20 @@
+<div class="modal-header">
+    <h3>{{modal.title}}</h3>
+</div>
+<div class="modal-body">
+    <div>
+        <form ng-controller="loginCtrl">
+            <input type="hidden" id="id" name="id" ng-model="car.id">
+            <label for="numerRej">Numer rejestracyjny:
+                <input type="text" id="numerRej" name="numerRej"
+                       ng-model="car.numerRej"/></label>
+            <br/><br/>
+            <label for="silnik">Silnik:
+                <input type="text" id="silnik" name="silnik"
+                       ng-model="car.silnik"/></label>
+            <br/><br/>
+            <button ng-click="send()">ZATWIERDŹ</button>
+            <button ng-click="cancel()">ANULUJ</button>
+        </form>
+    </div>
+</div>
