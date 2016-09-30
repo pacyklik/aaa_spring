@@ -32,7 +32,12 @@
 
 <hr/>
 
-<example-directive kolorek="#8b0000">to jest napis wewnatrz znacznika</example-directive>
+<example-directive dwukierunkowo="elementModelu" kolorek="#8b0000">to jest napis wewnatrz znacznika</example-directive>
+{{elementModelu}}
+
+<hr/>
+
+przykładowy filtr: {{elementModelu|uppercase}}
 
 <script src="/js/application.js" type="text/javascript"></script>
 <script src="/js/controller/app_controller.js" type="text/javascript"></script>
